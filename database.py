@@ -12,6 +12,8 @@ SELECT_ALL_BOOKS = "SELECT * FROM books;"
 SELECT_UPCOMING_BOOKS = "SELECT * FROM books WHERE release_timestamp > ?;"
 SELECT_READ_BOOKS = "SELECT * FROM books WHERE read = 1;"
 SET_BOOK_READ = "UPDATE books SET read = 1 WHERE title = ?;"
+DELETE_BOOK = "DELETE FROM books WHERE title = ?;"
+
 
 connection = sqlite3.connect("books.db")
 

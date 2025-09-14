@@ -11,6 +11,7 @@ INSERT_BOOKS = "INSERT INTO books (title, release_timestamp, read) VALUES (?,?,0
 SELECT_ALL_BOOKS = "SELECT * FROM books;"
 SELECT_UPCOMING_BOOKS = "SELECT * FROM books WHERE release_timestamp > ?;"
 SELECT_READ_BOOKS = "SELECT * FROM books WHERE read = 1;"
+SET_BOOK_READ = "UPDATE books SET read = 1 WHERE title = ?;"
 
 connection = sqlite3.connect("books.db")
 
@@ -37,7 +38,8 @@ def get_books(upcoming=False):
 
 
 def read_book(title):
-    pass
+    with connection:
+        connection.execute(SET_BOOK_READ, (title,))
 
 
 def get_read_books():

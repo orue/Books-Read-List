@@ -1,3 +1,5 @@
+import datetime
+
 import database
 
 menu = """Please select one of the following options:
@@ -16,9 +18,18 @@ print(welcome)
 database.create_tables()
 
 
+def prompt_add_book():
+    title = input("Book Title: ")
+    release_date = input("Release date (mm-dd-YYYY): ")
+    parsed_date = datetime.datetime.strptime(release_date, "%m-%d-%Y")
+    timestamp = parsed_date.timestamp()
+
+    database.add_book(title, timestamp)
+
+
 while (user_input := input(menu)) != "6":
     if user_input == "1":
-        pass
+        prompt_add_book()
     elif user_input == "2":
         pass
     elif user_input == "3":

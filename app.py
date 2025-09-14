@@ -27,16 +27,33 @@ def prompt_add_book():
     database.add_book(title, timestamp)
 
 
+def print_book_list(heading, books):
+    print(f"-- {heading} Books --")
+    for book in books:
+        book_date = datetime.datetime.fromtimestamp(book[1])
+        human_date = book_date.strftime("%b %d %Y")
+        print(f"{book[0]} (release date: {human_date})")
+    print("---- \n")
+
+
+def prompt_read_book():
+    book_title = input("Enter book title that you've read: ")
+    database.read_book(book_title)
+
+
 while (user_input := input(menu)) != "6":
     if user_input == "1":
         prompt_add_book()
     elif user_input == "2":
-        pass
+        books = database.get_books(True)
+        print_book_list("Upcoming", books)
     elif user_input == "3":
-        pass
+        books = database.get_books()
+        print_book_list("All", books)
     elif user_input == "4":
-        pass
+        prompt_read_book()
     elif user_input == "5":
-        pass
+        books = database.get_read_books()
+        print_book_list("Read", books)
     else:
         print("Invalid input, please try again!")

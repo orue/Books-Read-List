@@ -3,16 +3,21 @@ import sqlite3
 
 CREATE_BOOKS_TABLE = """CREATE TABLE IF NOT EXISTS books (
   title TEXT,
-  release_timestamp REAL,
-  read INTEGER
+  release_timestamp REAL
 );"""
 
-INSERT_BOOKS = "INSERT INTO books (title, release_timestamp, read) VALUES (?,?,0);"
+CREATE_READ_TABLE = """CREATE TABLE IF NOT EXISTS reads (
+    username = TEXT,
+    title TEXT
+    );"""
+
+INSERT_BOOKS = "INSERT INTO books (title, release_timestamp, read) VALUES (?,?);"
+DELETE_BOOK = "DELETE FROM books WHERE title = ?;"
 SELECT_ALL_BOOKS = "SELECT * FROM books;"
 SELECT_UPCOMING_BOOKS = "SELECT * FROM books WHERE release_timestamp > ?;"
-SELECT_READ_BOOKS = "SELECT * FROM books WHERE read = 1;"
+SELECT_READ_BOOKS = "SELECT * FROM reads WHERE username = ?;"
+INSERT_READS = "INSERT INTO reads (user_name, title) VALUES (?,?)"
 SET_BOOK_READ = "UPDATE books SET read = 1 WHERE title = ?;"
-DELETE_BOOK = "DELETE FROM books WHERE title = ?;"
 
 
 connection = sqlite3.connect("books.db")
@@ -21,6 +26,7 @@ connection = sqlite3.connect("books.db")
 def create_tables():
     with connection:
         connection.execute(CREATE_BOOKS_TABLE)
+        connection.execute(CREATE_READ_TABLE)
 
 
 def add_book(title, release_timestamp):
@@ -39,13 +45,20 @@ def get_books(upcoming=False):
         return cursor.fetchall()
 
 
-def read_book(title):
+def read_book(username, title):
     with connection:
-        connection.execute(SET_BOOK_READ, (title,))
+        connection.execute(DELETE_BOOK, (title,))
+        connection.execute(
+            INSERT_READS,
+            (
+                username,
+                title,
+            ),
+        )
 
 
-def get_read_books():
+def get_read_books(username):
     with connection:
         cursor = connection.cursor()
-        cursor.execute(SELECT_READ_BOOKS)
+        cursor.execute(SELECT_READ_BOOKS, (username,))
         return cursor.fetchall()
